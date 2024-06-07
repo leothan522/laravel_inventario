@@ -147,7 +147,7 @@
                         (*Anulado)
                     @endif
                 </td>
-                <td style="{{ $border }}">{{ $ajuste->segmentos->descripcion }}</td>
+                <td style="{{ $border }}">@if($ajuste->segmentos_id) {{ $ajuste->segmentos->descripcion }} @endif</td>
                 <td style="{{ $border }}">{{ \Carbon\Carbon::parse($ajuste->fecha)->format('d-m-Y h:i a') }}</td>
             </tr>
         @endforeach

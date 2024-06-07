@@ -74,9 +74,9 @@
                             <table class="table">
                                 <thead>
                                 <tr class="text-navy">
-                                    <th class="text-center" style="width: 10%">#</th>
+                                    <th style="width: 10%">#</th>
                                     <th>Tipo</th>
-                                    <th>Articulo</th>
+                                    <th>Artículo</th>
                                     <th>Descripción</th>
                                     <th>Almacén</th>
                                     <th>Unidad</th>
@@ -103,7 +103,7 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div class="col-md-4 float-right">
+                                <div class="col-md-4 float-right mt-3">
                                     <button type="submit" class="btn btn-block btn-success">
                                         <i class="fas fa-save"></i> Guardar
                                     </button>

@@ -26,7 +26,7 @@ class MovimientosExport implements FromView, ShouldAutoSize, WithTitle, WithColu
 
     public function view(): View
     {
-        return view('dashboard.compartir.excel_movimientos')
+        return view('dashboard.stock.excel_movimientos')
             ->with('getAjustes', $this->getAjustes)
             ->with('getSaldo', $this->getSaldo)
             ->with('getLimit', $this->limit)

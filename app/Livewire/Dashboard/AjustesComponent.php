@@ -20,7 +20,8 @@ class AjustesComponent extends Component
 {
     use LivewireAlert;
 
-    public $empresas_id, $rows = 0, $keyword, $editar = false, $footer, $view;
+    public $rows = 0, $numero = 14, $tableStyle = false;
+    public $empresas_id, $keyword, $editar = false, $footer, $view;
     public $nuevo = false, $btn_nuevo = true, $btn_editar = false, $btn_cancelar = false;
     public $ajuste_id, $ajuste_codigo, $ajuste_fecha, $ajuste_descripcion, $ajuste_contador = 1, $listarDetalles,
         $opcionDestroy, $ajuste_estatus, $ajuste_segmento, $ajuste_label_segmento;
@@ -42,15 +43,30 @@ class AjustesComponent extends Component
 
         $ajustes = Ajuste::buscar($this->keyword)
             ->where('empresas_id', $this->empresas_id)
-            ->orderBy('codigo', 'desc')
+            ->orderBy('fecha', 'desc')
             ->limit($this->rows)
             ->get();
-
+        $rowsAjustes = Ajuste::count();
         $selectSegmentos = AjusSegmento::orderBy('id', 'ASC')->get();
+
+        if ($rowsAjustes > $this->numero) {
+            $this->tableStyle = true;
+        }
 
         return view('livewire.dashboard.ajustes-component')
             ->with('listarAjustes', $ajustes)
+            ->with('rowsAjustes', $rowsAjustes)
             ->with('selectSegmentos', $selectSegmentos);
+    }
+
+    public function setLimit()
+    {
+        if (numRowsPaginate() < $this->numero) {
+            $rows = $this->numero;
+        } else {
+            $rows = numRowsPaginate();
+        }
+        $this->rows = $this->rows + $rows;
     }
 
     #[On('getEmpresaAjuste')]
@@ -59,12 +75,6 @@ class AjustesComponent extends Component
         $this->empresas_id = $empresaID;
         $this->limpiarAjustes();
         $this->reset(['keyword', 'ajuste_id']);
-    }
-
-    public function setLimit()
-    {
-        if (numRowsPaginate() < 14) { $rows = 14; } else { $rows = numRowsPaginate(); }
-        $this->rows = $this->rows + $rows;
     }
 
     public function limpiarAjustes()

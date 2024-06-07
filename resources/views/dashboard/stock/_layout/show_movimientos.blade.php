@@ -7,10 +7,10 @@
                 <button type="button" class="btn btn-tool" wire:click="aumetarLimit">
                     <i class="fas fa-sort-amount-down-alt"></i> Ver más
                 </button>
-                <a href="{{ route('movimientos.reportes', [$getAlmacen ?? 0, $empresas_id ?? 1, $getLimit]) }}" class="btn btn-tool btn-sm">
+                <a href="{{ route('movimientos.reportes', [$getAlmacen ?? 0, $empresas_id ?? 1, $getLimit]) }}" class="btn btn-tool btn-sm" target="_blank">
                     <i class="fas fa-download"></i>
                 </a>
-                <button type="button" class="btn btn-tool" data-card-widget="remove" wire:click="limpiarStock" onclick="verSpinnerOculto()">
+                <button type="button" class="btn btn-tool" data-card-widget="remove" wire:click="limpiarStock" {{--onclick="verSpinnerOculto()"--}}>
                     <i class="fas fa-times"></i> {{--{{ $limit }} - {{ $getLimit }}--}}
                 </button>
             </div>

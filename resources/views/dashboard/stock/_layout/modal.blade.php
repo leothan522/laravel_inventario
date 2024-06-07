@@ -66,7 +66,7 @@
                                                     <em class="text-xs text-muted"><i class="fas fa-history"></i> {{ verFecha($stock->updated_at, 'd/m/Y h:t a') }}</em>
                                                 </td>
                                                 <td class="text-right">
-                                                    {{ formatoMillares($stock->actual, 0) }}
+                                                    {{ formatoMillares($stock->actual, 3) }}
                                                 </td>{{--
                                                 <td class="text-right">{{ formatoMillares($existencia->comprometido, 3) }}</td>
                                                 <td class="text-right">{{ formatoMillares($existencia->disponible, 3) }}</td>--}}
@@ -74,7 +74,7 @@
                                             @php($total = $total + $stock->actual)
                                         @endforeach
                                         <tr>
-                                            <th colspan="2" class="text-right"><span class="text-muted mr-3">Total:</span><span class="text-navy">{{ formatoMillares($total, 0) }}</span></th>
+                                            <th colspan="2" class="text-right"><span class="text-muted mr-3">Total:</span><span class="text-navy">{{ formatoMillares($total, 3) }}</span></th>
                                         </tr>
                                     @endif
                                     </tbody>

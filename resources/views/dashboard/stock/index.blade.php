@@ -7,14 +7,14 @@
 @section('content_header')
 
     <div class="row mb-2">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <h1 class="m-0 text-dark"><i class="fas fa-boxes"></i> Stock</h1>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <button type="button" class="btn btn-default btn-sm float-right ml-1 mr-1"
                     onclick="showRow('ajustes')" id="button_ajustes"
                 {{--wire:click="verAjustes" @if($view == "ajustes" || !comprobarPermisos('ajustes.index')) disabled @endif--}}>
-                <i class="fas fa-list"></i> Ajustes
+                <i class="fas fa-list"></i> Ajustes de Entrada y Salida
             </button>
             <button type="button" class="btn btn-default btn-sm float-right ml-1 mr-1"
                     onclick="showRow('stock')" id="button_stock" disabled
@@ -68,7 +68,7 @@
         }
 
         $(document).ready(function () {
-            verSpinnerOculto();
+            //verSpinnerOculto();
             Livewire.dispatch('updatedEmpresaID');
         });
 
@@ -92,14 +92,14 @@
         }
 
         function actualizar() {
-            verSpinnerOculto();
+            //verSpinnerOculto();
             $('.cargar_ajustes').removeClass('d-none');
             Livewire.dispatch('showStock');
             Livewire.dispatch('showAjustes');
         }
 
         function cerrarInventarios() {
-            verSpinnerOculto();
+            //verSpinnerOculto();
             $('.cerra_inventarios').click();
         }
 

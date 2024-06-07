@@ -51,7 +51,7 @@
                                     <tr class="text-navy">
                                         <th style="width: 5%">#</th>
                                         <th>Tipo</th>
-                                        <th>Articulo</th>
+                                        <th>Artículo</th>
                                         <th>Descripción</th>
                                         <th>Almacén</th>
                                         <th>Unidad</th>
@@ -73,7 +73,7 @@
                                                     @if($detalle->tipo->tipo == 2)
                                                         <span>-</span>
                                                     @endif
-                                                    {{ formatoMillares($detalle->cantidad, 0) }}
+                                                    {{ formatoMillares($detalle->cantidad, 3) }}
                                                 </td>
                                             </tr>
                                             @php($i++)

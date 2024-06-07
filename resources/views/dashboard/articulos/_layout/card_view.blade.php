@@ -4,13 +4,13 @@
     <div class="card-header">
         <h3 class="card-title">
             @if($new_articulo)
-                Nuevo Articulo
+                Nuevo Artículo
             @endif
             @if(!$new_articulo && $view == 'form')
-                Editar Articulo
+                Editar Artículo
             @endif
             @if($view != "form")
-                Ver Articulo
+                Ver Artículo
             @endif
         </h3>
         <div class="card-tools">
@@ -37,7 +37,7 @@
         @include('dashboard.articulos._layout.form')
         @if($view != 'form' && $view != 'show')
             <div class="row m-5">
-                Debes seleccionar un Articulo ó Precionar el boton Nuevo para empezar...
+                Debes seleccionar un Artículo ó Precionar el boton Nuevo para empezar...
             </div>
         @endif
         <div class="row @if($imagen) d-block @else d-none @endif">

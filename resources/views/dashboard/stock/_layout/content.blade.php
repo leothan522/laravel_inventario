@@ -8,7 +8,7 @@
         @include('dashboard.stock._layout.show_movimientos')
     </div>
     <div class="row">
-        <div class="col-12" style="height: 60vh">
+        <div class="col-12" {{--style="height: 60vh"--}}>
             <div class="overlay-wrapper d-none cargar_stock">
                 <div class="overlay">
                     <div class="spinner-border text-navy" role="status">
