@@ -48,7 +48,7 @@
                             <i class="fas fa-power-off @if(estatusTienda($tienda->id, true)) text-success @else text-danger @endif"></i>
                     </span>
                     <!-- Emphasis label -->
-                    <small class="badge {{--badge-danger--}}">
+                    <small class="badge {{--badge-danger--}} text-uppercase">
                         @if($tienda->default) <i class="fas fa-certificate text-muted text-xs"></i> @endif
                         {{ mb_strtoupper($tienda->nombre) }}
                     </small>

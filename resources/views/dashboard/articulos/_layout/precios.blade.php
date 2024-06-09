@@ -27,8 +27,8 @@
                         @if($listarPrecios->isNotEmpty())
                             @foreach($listarPrecios as $precio)
                                 <tr>
-                                    <td>{{ $precio->unidad->codigo }}</td>
-                                    <td>{{ $precio->moneda }}</td>
+                                    <td class="text-uppercase">{{ $precio->unidad->codigo }}</td>
+                                    <td class="text-uppercase">{{ $precio->moneda }}</td>
                                     <td class="text-right">{{ formatoMillares($precio->precio, 2) }}</td>
                                     <td class="text-right">
                                         @if($precios_id == $precio->id)

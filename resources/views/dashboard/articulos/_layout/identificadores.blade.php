@@ -26,7 +26,7 @@
                         @if($listarIdentificadores->isNotEmpty())
                             @foreach($listarIdentificadores as $identificador)
                                 <tr>
-                                    <td>{{ $identificador->serial }}</td>
+                                    <td class="text-uppercase">{{ $identificador->serial }}</td>
                                     <td class="text-right">{{ formatoMillares($identificador->cantidad, 3) }}</td>
                                     <td class="text-right">
                                         @if($identificadores_id == $identificador->id)

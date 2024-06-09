@@ -25,8 +25,8 @@
                         <tbody>
                         @if($primaria)
                             <tr>
-                                <td>{{ $primaria_code }}</td>
-                                <td>
+                                <td class="text-uppercase">{{ $primaria_code }}</td>
+                                <td class="text-uppercase">
                                     {{ $primaria_nombre }}
                                     <small class="badge float-right">
                                         Primaria
