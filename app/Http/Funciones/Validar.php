@@ -34,19 +34,19 @@ function allPermisos()
                 'Crear Ajustes' => 'ajustes.create',
                 'Editar Ajustes' => 'ajustes.edit',
                 'Anular Ajustes' => 'ajustes.anular',
-
             ]
         ],
         'Articulos' => [
             'route' => 'articulos.index',
             'submenu' => [
-                'Crear Articulos' => 'articulos.create',
-                'Editar Articulos' => 'articulos.edit',
                 'Cambiar Estatus' => 'articulos.estatus',
                 'Cambiar Unidades' => 'articulos.unidades',
                 'Cambiar Precios' => 'articulos.precios',
                 'Cambiar Identificadores' => 'articulos.identificadores',
-                'Cambiar Imagenes' => 'articulos.imagenes'
+                'Cambiar Imagenes' => 'articulos.imagenes',
+                'Crear Articulos' => 'articulos.create',
+                'Editar Articulos' => 'articulos.edit',
+                'Borrar Articulos' => 'articulos.destroy'
             ]
         ],
         'Categorias' => [
@@ -55,7 +55,6 @@ function allPermisos()
                 'Crear categorias' => 'categorias.create',
                 'Editar categorias' => 'categorias.edit',
                 'Borrar categorias' => 'categorias.destroy'
-
             ]
         ],
         'Unidades' => [
@@ -70,15 +69,15 @@ function allPermisos()
         'Usuarios' => [
             'route' => 'usuarios.index',
             'submenu' => [
-                'Crear Usuarios' => 'usuarios.create',
-                'Editar Usuarios' => 'usuarios.edit',
                 'Suspender Usuarios' => 'usuarios.estatus',
                 'Reestablecer Contraseña' => 'usuarios.password',
                 'Descargar Excel' => 'usuarios.excel',
-                'Eliminar Usuarios' => 'usuarios.destroy',
+                'Crear Usuarios' => 'usuarios.create',
+                'Editar Usuarios' => 'usuarios.edit',
+                'Borrar Usuarios' => 'usuarios.destroy',
             ]
         ],
-        'Empresas' => [
+        /*'Empresas' => [
             'route' => 'empresas.index',
             'submenu' => [
                 'Crear Empresas' => 'empresas.create',
@@ -88,7 +87,7 @@ function allPermisos()
                 'Borrar Empresas' => 'empresas.destroy'
 
             ]
-        ]
+        ]*/
         /*'Procedencias' => [
             'route' => 'procedencias.index',
             'submenu' => [
