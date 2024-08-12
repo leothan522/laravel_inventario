@@ -42,5 +42,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('parametros', function ($user){
             return $user->role == 100;
         });
+
+        Gate::define('pruebas', function ($user){
+            return $user->role == 100;
+        });
+
     }
 }

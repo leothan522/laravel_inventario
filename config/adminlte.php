@@ -329,29 +329,10 @@ return [
                 ]
             ],
         ],
-        /*[
-            'text'      => 'E-commerce',
-            'icon'      => 'fas fa-fw fa-store ',
-            'can'       => ['empresas', 'ofertas'],
-            'submenu' => [
-                [
-                    'text' => 'Ofertas',
-                    'icon' => 'fas fa-fw fa-gifts',
-                    'route' => 'ofertas.index',
-                    'can' => 'ofertas',
-                ],
-                [
-                    'text' => 'Empresas',
-                    'icon' => 'fas fa-fw fa-store-alt',
-                    'route'  => 'empresas.index',
-                    'can'  => 'empresas',
-                ]
-            ],
-        ],*/
         [
             'text'      => 'Configuración',
             'icon'      => 'fas fa-fw fa-cogs',
-            'can'       => ['usuarios', 'parametros'],
+            'can'       => ['usuarios', 'parametros', 'empresas', 'pruebas'],
             'submenu' => [
                 [
                     'text' => 'Usuarios',
@@ -370,6 +351,12 @@ return [
                     'icon' => 'fas fa-fw fa-list',
                     'route' => 'parametros.index',
                     'can' => 'parametros',
+                ],
+                [
+                    'text' => 'Pruebas',
+                    'icon' => 'fas fa-fw fa-tools',
+                    'route' => 'pruebas.index',
+                    'can' => 'pruebas',
                 ]
             ],
         ],

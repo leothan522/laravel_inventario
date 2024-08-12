@@ -1,17 +1,7 @@
 <div class="row justify-content-center">
 
     <div class="col-md-4">
-        @include('dashboard.parametros.card_form')
-    </div>
-
-    <div class="col-md-8">
-        @include('dashboard.parametros.card_table')
-    </div>
-
-</div>
-<div class="row justify-content-center">
-    <div class="col-md-12">
-        <label for="">Parametros Manuales</label>
+        <label>Parametros Manuales</label>
         <ul>
             <li>numRowsPaginate[null|numero]</li>
             <li>size_codigo[tamaño|null]</li>
@@ -25,4 +15,10 @@
             <li>codigo_pedido</li>--}}
         </ul>
     </div>
+
+    <div class="col-md-8">
+        @include('dashboard.parametros.table')
+        @include('dashboard.parametros.modal')
+    </div>
+
 </div>

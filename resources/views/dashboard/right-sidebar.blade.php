@@ -25,8 +25,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('prueba') }}" class="nav-link" target="_blank">
-                    <i class="fas fa-store-alt"></i> Pagina de Prueba
+                <a href="{{ route('pruebas.index') }}" class="nav-link" target="_blank">
+                    <i class="fas fa-tools"></i> Pagina de Prueba
                 </a>
             </li>
         @endif

@@ -7,23 +7,46 @@ use Illuminate\Validation\Rule;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class ParametrosComponent extends Component
 {
     use LivewireAlert;
-    use WithPagination;
 
+    public $rows = 0, $numero = 14, $tableStyle = false;
     public $view = "create", $keyword;
     public $parametro_id, $nombre, $tabla_id, $valor;
 
+    public function mount()
+    {
+        $this->setLimit();
+    }
+
     public function render()
     {
-        $parametros = Parametro::buscar($this->keyword)->orderBy('updated_at', 'ASC')->paginate(numRowsPaginate());
+        $parametros = Parametro::buscar($this->keyword)
+            ->orderBy('created_at', 'DESC')
+            ->limit($this->rows)
+            ->get();
+
         $rows = Parametro::count();
+
+        if ($rows > $this->numero) {
+            $this->tableStyle = true;
+        }
+
         return view('livewire.dashboard.parametros-component')
             ->with('parametros', $parametros)
-            ->with('rows', $rows);
+            ->with('rowsParametros', $rows);
+    }
+
+    public function setLimit()
+    {
+        if (numRowsPaginate() < $this->numero) {
+            $rows = $this->numero;
+        } else {
+            $rows = numRowsPaginate();
+        }
+        $this->rows = $this->rows + $rows;
     }
 
     public function limpiar()
@@ -45,8 +68,6 @@ class ParametrosComponent extends Component
 
     public function save()
     {
-        $type = 'success';
-        $message = 'Hola Mundo';
 
         $this->validate($this->rules($this->parametro_id));
 
@@ -60,28 +81,32 @@ class ParametrosComponent extends Component
             $message = "Parametro Actualizado";
         }
 
-        $parametro->nombre = $this->nombre;
-        if (!empty($this->tabla_id)){
-            $parametro->tabla_id = $this->tabla_id;
-        }
-        if (!empty($this->valor)){
-            $parametro->valor = $this->valor;
-        }
-        $parametro->save();
+        if ($parametro){
+            $parametro->nombre = $this->nombre;
+            if (!empty($this->tabla_id)){
+                $parametro->tabla_id = $this->tabla_id;
+            }
+            if (!empty($this->valor)){
+                $parametro->valor = $this->valor;
+            }
+            $parametro->save();
 
-        $this->alert($type, $message);
+            $this->alert('success', $message);
+        }
         $this->limpiar();
+        $this->dispatch('cerrarModal');
     }
 
     public function edit($id)
     {
-        $this->limpiar();
         $parametro = Parametro::find($id);
-        $this->parametro_id = $parametro->id;
-        $this->nombre = $parametro->nombre;
-        $this->tabla_id = $parametro->tabla_id;
-        $this->valor = $parametro->valor;
-        $this->view = "edit";
+        if ($parametro){
+            $this->parametro_id = $parametro->id;
+            $this->nombre = $parametro->nombre;
+            $this->tabla_id = $parametro->tabla_id;
+            $this->valor = $parametro->valor;
+            $this->view = "edit";
+        }
     }
 
     #[On('buscar')]
@@ -108,12 +133,17 @@ class ParametrosComponent extends Component
     public function confirmed()
     {
         $parametro = Parametro::find($this->parametro_id);
-        $parametro->delete();
-        $this->limpiar();
-        $this->alert(
-            'success',
-            'Parametro Eliminado'
-        );
+        if ($parametro){
+            $parametro->delete();
+            $this->limpiar();
+            $this->alert('success', 'Parametro Eliminado.');
+        }
+    }
+
+    #[On('cerrarModal')]
+    public function cerrarModal()
+    {
+        //JS
     }
 
 }

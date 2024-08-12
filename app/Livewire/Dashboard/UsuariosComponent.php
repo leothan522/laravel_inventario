@@ -16,27 +16,51 @@ use Livewire\WithPagination;
 class UsuariosComponent extends Component
 {
     use LivewireAlert;
-    use WithPagination;
+    use LivewireAlert;
 
+    public $rows = 0, $numero = 14, $tableStyle = false;
     public $view = "create", $keyword;
     public $name, $email, $password, $role, $usuarios_id;
     public $edit_name, $edit_email, $edit_password, $edit_role = 0, $edit_roles_id = 0, $created_at, $estatus = 1, $photo, $empresas_id;
     public $rol_nombre, $tabla = 'usuarios', $getPermisos, $cambios = false;
     public $select_empresas, $ver_empresas; // acceso a empresas
 
+    public function mount()
+    {
+        $this->setLimit();
+    }
+
     public function render()
     {
         $roles = Parametro::where('tabla_id', '-1')->get();
+
         $users = User::buscar($this->keyword)
             ->orderBy('role', 'DESC')
             ->orderBy('roles_id', 'DESC')
             ->orderBy('created_at', 'DESC')
-            ->paginate(numRowsPaginate());
+            ->limit($this->rows)
+            ->get();
+
         $rows = User::count();
+
+        if ($rows > $this->numero) {
+            $this->tableStyle = true;
+        }
+
         return view('livewire.dashboard.usuarios-component')
             ->with('listarRoles', $roles)
             ->with('listarUsers', $users)
-            ->with('rows', $rows);
+            ->with('rowsUsuarios', $rows);
+    }
+
+    public function setLimit()
+    {
+        if (numRowsPaginate() < $this->numero) {
+            $rows = $this->numero;
+        } else {
+            $rows = numRowsPaginate();
+        }
+        $this->rows = $this->rows + $rows;
     }
 
     #[On('limpiar')]
@@ -47,6 +71,7 @@ class UsuariosComponent extends Component
             'edit_name', 'edit_email', 'edit_password', 'edit_role', 'edit_roles_id', 'created_at', 'estatus',
             'photo', 'empresas_id', 'rol_nombre', 'getPermisos', 'cambios'
         ]);
+        $this->resetErrorBag();
     }
 
     public function generarClave()
@@ -106,105 +131,118 @@ class UsuariosComponent extends Component
             }
             $usuarios->save();
             $this->limpiar();
+            $this->dispatch('cerrarModal', selector: 'btn_modal_default_create');
             $this->alert('success', 'Usuario Creado.');
         } else {
             //editar
             $usuarios = User::find($this->usuarios_id);
-            $usuarios->name = ucwords($this->edit_name);
-            $usuarios->email = strtolower($this->edit_email);
-            if ($this->edit_role > 1) {
-                $usuarios->role = 2;
-                $usuarios->roles_id = $this->edit_role;
-                $role = Parametro::where('tabla_id', '-1')->where('id', $this->edit_role)->first();
-                if ($role) {
-                    $usuarios->permisos = $role->valor;
+            if ($usuarios){
+                $usuarios->name = ucwords($this->edit_name);
+                $usuarios->email = strtolower($this->edit_email);
+                if ($this->edit_role > 1 && $this->edit_role < 100) {
+                    $usuarios->role = 2;
+                    $usuarios->roles_id = $this->edit_role;
+                    $role = Parametro::where('tabla_id', '-1')->where('id', $this->edit_role)->first();
+                    if ($role) {
+                        $usuarios->permisos = $role->valor;
+                    }
+                } else {
+                    $usuarios->role = $this->edit_role;
+                    $usuarios->roles_id = null;
                 }
-            } else {
-                $usuarios->role = $this->edit_role;
-                $usuarios->roles_id = null;
+                $usuarios->save();
+                $this->edit($this->usuarios_id);
+                $this->alert('success', 'Usuario Actualizado.');
+            }else{
+                $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
             }
-            $usuarios->update();
-            $this->edit($this->usuarios_id);
-            $this->alert('success', 'Usuario Actualizado.');
         }
     }
 
     public function edit($id)
     {
+        $this->limpiar();
         $usuario = User::find($id);
-        $this->usuarios_id = $usuario->id;
-        $this->edit_name = $usuario->name;
-        $this->edit_email = $usuario->email;
-        if ($usuario->roles_id) {
-            $this->edit_role = $usuario->roles_id;
-        }else{
-            $this->edit_role = $usuario->role;
-        }
-        $this->edit_roles_id = $usuario->roles_id;
-        $this->estatus = $usuario->estatus;
-        $this->created_at = $usuario->created_at;
-        $this->photo = $usuario->profile_photo_path;
-        $this->rol_nombre = verRole($usuario->role, $usuario->roles_id);
-        $this->getPermisos = $usuario->permisos;
-
-        //acceso a empresas
-
-        $getEmpresas = Empresa::orderBy('nombre', 'ASC')->get();
-        $data = array();
-        $placeholder = '';
-        foreach ($getEmpresas as $empresa){
-            $option = [
-                'id' => $empresa->id,
-                'text' => $empresa->nombre
-            ];
-            if (leerJson($empresa->permisos, $this->usuarios_id)){
-                $placeholder .= '['.$empresa->nombre.'] <br>';
+        if ($usuario){
+            $this->usuarios_id = $usuario->id;
+            $this->edit_name = $usuario->name;
+            $this->edit_email = $usuario->email;
+            if ($usuario->roles_id) {
+                $this->edit_role = $usuario->roles_id;
+            }else{
+                $this->edit_role = $usuario->role;
             }
-            array_push($data, $option);
-        }
-        $this->ver_empresas = $placeholder;
-        $this->dispatch('selectEmpresas', data: $data);
+            $this->edit_roles_id = $usuario->roles_id;
+            $this->estatus = $usuario->estatus;
+            $this->created_at = $usuario->created_at;
+            $this->photo = $usuario->profile_photo_path;
+            /*$this->empresas_id = $usuario->empresas_id;*/
+            $this->rol_nombre = verRole($usuario->role, $usuario->roles_id);
+            $this->getPermisos = $usuario->permisos;
 
+            //acceso a empresas
+
+            $getEmpresas = Empresa::orderBy('nombre', 'ASC')->get();
+            $data = array();
+            $placeholder = '';
+            foreach ($getEmpresas as $empresa){
+                $option = [
+                    'id' => $empresa->id,
+                    'text' => $empresa->nombre
+                ];
+                if (leerJson($empresa->permisos, $this->usuarios_id)){
+                    $placeholder .= '['.$empresa->nombre.'] <br>';
+                }
+                array_push($data, $option);
+            }
+            $this->ver_empresas = $placeholder;
+            $this->dispatch('selectEmpresas', data: $data);
+
+        }else{
+            $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
+        }
     }
 
     public function cambiarEstatus($id)
     {
         $usuario = User::find($id);
-        if ($usuario->estatus) {
-            $usuario->estatus = 0;
-            $texto = "Usuario Suspendido";
-        } else {
-            $usuario->estatus = 1;
-            $texto = "Usuario Activado";
+        if ($usuario){
+            if ($usuario->estatus) {
+                $usuario->estatus = 0;
+                $texto = "Usuario Suspendido";
+            } else {
+                $usuario->estatus = 1;
+                $texto = "Usuario Activado";
+            }
+            $usuario->update();
+            $this->estatus = $usuario->estatus;
+            $this->alert('success', $texto);
+        }else{
+            $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
         }
-        $usuario->update();
-        $this->estatus = $usuario->estatus;
-        $this->alert(
-            'success',
-            $texto
-        );
     }
 
     public function restablecerClave($id)
     {
-        if (!$this->edit_password) {
-            $clave = Str::password(8);
-        } else {
-            $clave = $this->edit_password;
-        }
         $usuario = User::find($id);
-        $usuario->password = Hash::make($clave);
-        $usuario->update();
-        $this->edit_password = $clave;
-        $this->alert(
-            'success',
-            'Contraseña Restablecida.'
-        );
+        if ($usuario){
+            if (!$this->edit_password) {
+                $clave = Str::password(8);
+            } else {
+                $clave = $this->edit_password;
+            }
+            $usuario->password = Hash::make($clave);
+            $usuario->update();
+            $this->edit_password = $clave;
+            $this->alert('success', 'Contraseña Restablecida');
+        }else{
+            $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
+        }
     }
 
     public function destroy($id)
     {
-        $this->usuarios_id = $id;
+        $this->usuario_id = $id;
         $this->confirm('¿Estas seguro?', [
             'toast' => false,
             'position' => 'center',
@@ -220,30 +258,32 @@ class UsuariosComponent extends Component
     public function confirmedUser()
     {
         $usuario = User::find($this->usuarios_id);
+        if ($usuario){
+            //codigo para verificar si realmente se puede borrar, dejar false si no se requiere validacion
+            $vinculado = false;
 
-        //codigo para verificar si realmente se puede borrar, dejar false si no se requiere validacion
-        $vinculado = false;
-
-        if ($vinculado) {
-            $this->alert('warning', '¡No se puede Borrar!', [
-                'position' => 'center',
-                'timer' => '',
-                'toast' => false,
-                'text' => 'El registro que intenta borrar ya se encuentra vinculado con otros procesos.',
-                'showConfirmButton' => true,
-                'onConfirmed' => '',
-                'confirmButtonText' => 'OK',
-            ]);
-        } else {
-            $usuario->delete();
-            $this->limpiar();
-            $this->dispatch('cerrarModal');
-            $this->alert(
-                'success',
-                'Usuario Eliminado.'
-            );
+            if ($vinculado) {
+                $this->alert('warning', '¡No se puede Borrar!', [
+                    'position' => 'center',
+                    'timer' => '',
+                    'toast' => false,
+                    'text' => 'El registro que intenta borrar ya se encuentra vinculado con otros procesos.',
+                    'showConfirmButton' => true,
+                    'onConfirmed' => '',
+                    'confirmButtonText' => 'OK',
+                ]);
+            } else {
+                $usuario->delete();
+                $this->limpiar();
+                $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
+                $this->alert(
+                    'success',
+                    'Usuario Eliminado.'
+                );
+            }
+        }else{
+            $this->dispatch('cerrarModal', selector: 'button_edit_modal_cerrar');
         }
-
     }
 
     #[On('buscar')]
@@ -253,7 +293,7 @@ class UsuariosComponent extends Component
     }
 
     #[On('cerrarModal')]
-    public function cerrarModal()
+    public function cerrarModal($selector)
     {
         //JS
     }
@@ -278,16 +318,41 @@ class UsuariosComponent extends Component
 
     public function savePermisos(){
         $usuario = User::find($this->usuarios_id);
-        $usuario->permisos = $this->getPermisos;
-        $usuario->save();
-        $this->reset('cambios');
-        $this->alert('success', 'Permisos Guardados.');
+        if ($usuario){
+            $usuario->permisos = $this->getPermisos;
+            $usuario->save();
+            $this->reset('cambios');
+            $this->alert('success', 'Permisos Guardados.');
+        }
     }
 
     public function deletePermisos()
     {
         $this->reset('getPermisos');
         $this->cambios = true;
+    }
+
+    public function getEstatusUsuario($i, $icon = null)
+    {
+        if (is_null($icon)){
+            $suspendido = "Suspendido";
+            $activado = "Activo";
+        }else{
+            $suspendido = '<i class="fa fa-user-slash"></i>';
+            $activado = '<i class="fa fa-user-check"></i>';
+        }
+        $status = [
+            '0' => '<span class="text-danger">'.$suspendido.'</span>',
+            '1' => '<span class="text-success">'.$activado.'</span>',
+            /*'2' => '<span class="text-success">Confirmado</span>'*/
+        ];
+        return $status[$i];
+    }
+
+    #[On('actualizar')]
+    public function actualizar()
+    {
+        //JS
     }
 
     //acceso a empresas **********************************************************************

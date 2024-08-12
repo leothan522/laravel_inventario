@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\PruebaController;
 use App\Http\Controllers\FCM\FcmController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\ParametrosController;
@@ -35,6 +36,7 @@ Route::middleware([
     Route::get('parametros', [ParametrosController::class, 'index'])->name('parametros.index');
     Route::get('usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
     Route::get('export/usuarios/{buscar?}', [UsuariosController::class, 'export'])->name('usuarios.excel');
+    Route::get('pruebas', [PruebaController::class, 'index'])->name('pruebas.index');
     Route::get('empresas', [EmpresasController::class, 'index'])->name('empresas.index');
     Route::get('articulos', [ArticulosController::class, 'index'])->name('articulos.index');
     Route::post('export/articulos', [ArticulosController::class, 'reporteArticulos'])->name('articulos.reportes');
@@ -48,11 +50,6 @@ Route::middleware([
 Route::get('dashboard/perfil', [UsuariosController::class, 'perfil'])->middleware('auth')->name('usuarios.perfil');
 Route::get('chat-directo/{id?}', [ChatController::class, 'index'])->middleware(['user.android'])->name('chat.directo');
 Route::get('export/{almacen}/{empresa}/{limit}/movimientos/', [CompartirController::class, 'reporteMovimientos'])->name('movimientos.reportes');
-
-Route::get('/prueba', function () {
-    //Alert::alert('Title', 'Message', 'Type');
-    return view('dashboard._componentes.home');
-})->middleware(['auth', 'user.permisos'])->name("prueba");
 
 
 
